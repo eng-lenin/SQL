@@ -1,0 +1,594 @@
+---Aula 00 download SQL e ssms
+---Aula 01 instalação, baixar banco de dados e teste dos primeiros comandos
+para criar banco, só dar botão direito em database, criar
+depois para excluir só clicar com botão direito e delete, lembrar de marcar a de fechar conexões existentes opção nar caixa
+dá pra fazer por código, new query: create database lenin;
+dá pra excluir por código, new query: drop database lenin;
+vamos usar banco de dados disponibilizado pela microsoft
+baixar
+colocar na pasta:
+C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA
+ir no ssms
+clicar com botaão direito em database, restore database, vai abrir uma janela, em device procurar o arquivo na pasta DATA, caminho colei acima, dar ok e tudo
+no ícone do banco criado (adworsks...) expandir a expandir tabelas, em alguma botão direito e mostrar 1000 linhas superiores, isso é pra testar se os dados estão ali mesmo
+
+---AULA 02 select
+seleciona uma coluna ou mais de uma tabela
+selecionando o banco, apertar botão new query:
+
+SELECT coluna1,coluna2
+FROM tabela;
+
+SELECT *
+FROM tabela;
+nesse caso, todas as colunas serão selecionadas
+
+SELECT *
+FROM person.person;
+
+seleciona todas as colunas
+
+SELECT *
+FROM person.person;
+
+SELECT Title
+FROM person.person
+
+coloquei mais duas linhas abaixo para selecinar somente a coluna TItle, destacando as duas linhas 
+com o mouse e dando F5 somente elas duas serão executadas e vai retronar somente a coluna Title
+
+Desafio: 
+SELECT FirstName,LastName
+FROM person.person;
+
+---AULA 03
+distinct
+usado para quando se quer omitir resultados repetidos
+
+SELECT distinct coluna1,coluna2
+FROM tabela
+
+SELECT DISTINCT FirstName
+FROM person.person;
+
+---AULA04
+where
+extrair apenas algumas informações em particular de uma tabela 
+
+SELECT coluna1,coluna2,colunan
+FROM tabela
+WHERE condicao
+
+comentários no SQL: -- ou /* */
+
+Geralmente o where se usa com os operadores lógicos, >, <, =, <> que é o diferente , enfim
+
+SELECT *
+FROM person.person
+WHERE LastName = 'miller'
+
+SELECT *
+FROM person.person
+WHERE LastName = 'miller' and FirstName = 'anna'
+
+SELECT *
+FROM production.product
+WHERE color = 'blue' or color = 'black'
+
+SELECT *
+FROM production.product
+WHERE listprice > 1500
+
+SELECT *
+FROM production.product
+WHERE listprice > 1500 and listprice < 5000
+
+Desafios:
+
+SELECT Name
+FROM production.product
+WHERE Weight > 500 and Weight <= 700
+
+SELECT *
+FROM HumanResources.Employee
+WHERE MaritalStatus = 'M' and SalariedFlag = 'true' //ou igual a 1
+
+SELECT *
+FROM person.Person
+WHERE FirstName = 'peter' and LastName = 'krebs'
+//peguei o ID dele e abaixo o email
+SELECT *
+FROM Person.EmailAddress
+WHERE BusinessEntityID = 26
+
+---AULA05
+
+count 
+serve para dar o número de linhas que bate com a condição dada 
+
+SELECT COUNT(*)
+FROM tabela
+
+contaria todas as linhas da tabela 
+
+SELECT COUNT (title)
+FROM tabela
+
+contaria quantos títulos tem
+
+SELECT COUNT (DISTINCT title)
+FROM tabela 
+
+contaria somente os titles que não se repetem 
+
+DESAFIOS
+
+SELECT COUNT (*)
+FROM production.product
+
+SELECT COUNT (Size)
+FROM Production.Product
+
+--AULA06
+top - vai limitar a quantidade de dados dada por um select
+
+SELECT TOP 10 *
+FROM tabela 
+
+--AULA07
+order by - ordene os resultados por alguma coluna em ordem crescente ou decrescente
+
+SELECT coluna1,coluna2 
+FROM tabela 
+ORDER BY coluna1 asc/desc 
+
+SELECT *
+FROM person.person 
+ORDER BY first name asc
+
+SELECT *
+FROM person.person 
+ORDER BY firstname asc, lastname desc
+
+SELECT firstname, lastname 
+FROM person.person 
+ORDER BY firstname asc, lastname desc
+
+SELECT firstname, lastname 
+FROM person.person 
+ORDER BY MiddleName asc
+
+DESAFIOS 
+
+SELECT TOP 10 productid 
+FROM Production.Product
+ORDER BY ListPrice desc
+
+--AULA08
+between - usado para encontrar um valor entre um valor mínimo e um máximo
+
+SELECT *
+FROM Production.Product
+WHERE ListPrice BETWEEN 1000 and 1500
+
+SELECT *
+FROM Production.Product
+WHERE ListPrice not BETWEEN 1000 and 1500
+
+SELECT *
+FROM HumanResources.Employee
+WHERE HireDate BETWEEN '2009/01/01' and '2010/01/01'
+ORDER BY HireDate
+
+--AULA09
+IN - se usa junto com o WHERE para verificar se o valor corresponde com qualquer valor passado
+na lista de valores 
+
+se quero tudo que é azul ou preto ou branco ao invés de ir colocando no WHERE o or pra todas as cores, abro um
+WHERE COLOR IN ('azul','preto','branco')
+
+SELECT *
+FROM Person.Person
+WHERE BusinessEntityID IN (2,7,13)
+
+SELECT *
+FROM Person.Person
+WHERE BusinessEntityID NOT IN (2,7,13)
+
+--AULA10
+LIKE - quer encontrar a pessoa mas não sabe direito o nome, só uma parte 
+
+SELECT *
+FROM Person.Person
+WHERE firstName like 'ovi%'
+ovi tá no início
+
+SELECT *
+FROM Person.Person
+WHERE firstName like '%to'
+to tá no fim 
+
+SELECT *
+FROM Person.Person
+WHERE firstName like '%essa%'
+no meio 
+
+SELECT *
+FROM Person.Person
+WHERE firstName like '%ro_'
+substitui somente o caractere do numero de underlines, no caso 1
+
+--AULA11
+Desafios 
+
+SELECT COUNT (listprice)
+FROM Production.Product
+WHERE ListPrice > 1500
+
+SELECT COUNT (lastname)
+FROM Person.Person
+WHERE LastName like '%p'
+
+SELECT COUNT(DISTINCT(city))
+FROM Person.Address
+
+SELECT DISTINCT(city)
+FROM Person.Address
+
+SELECT COUNT (*)
+FROM Production.Product
+WHERE color = 'red' and ListPrice BETWEEN 500 and 1000
+
+SELECT COUNT (*)
+FROM Production.Product
+WHERE name like '%road%'
+
+--AULA12
+MIN MAX SUM AVG
+
+SELECT TOP 10 sum(LineTotal) AS Soma
+FROM Sales.SalesOrderDetail
+O AS deu o nome SOMA para a soma, cuidado que não somou das TOP 10, só mostrou antes de eu usar o somar pra ver 
+o que tinha na tabela 
+
+SELECT MIN (LineTOtal)
+FROM Sales.SalesOrderDetail
+
+SELECT MAX (LineTOtal)
+FROM Sales.SalesOrderDetail
+
+SELECT AVG (LineTOtal)
+FROM Sales.SalesOrderDetail
+
+
+--AULA13
+GROUP BY - divide o resultado da pesquisa em grupos
+
+SELECT specialofferid, SUM (unitprice) AS 'SOMA'
+FROM Sales.SalesOrderDetail
+GROUP BY SpecialOfferID
+
+pega todos os id de oferta (specialpfferid) e faz as somas de todos os preços unitários dos produtos com cada id
+assim sabemos a soma do que foi vendido em cada promoção (cada id é uma promocao e o produto leva esse id), dá pra 
+colocr um WHERE specialofferid = 9 , por exemplo, aí agrupa só o do id 9
+
+SELECT ProductID, COUNT (ProductID) AS 'CONTAGEM'
+FROM Sales.SalesOrderDetail
+GROUP BY ProductID
+
+conta quantas vezes cada product id apareceu e agrupa pelo número do product id, então
+seria o quanto cada product id aparecceu, que é quantos foi vendidos
+
+SELECT FirstName, COUNT (firstname) AS 'CONTAGEM'
+FROM Person.Person
+GROUP BY firstname
+
+diz quantos tem com cada nome 
+
+SELECT color, AVG (listprice) AS 'PREÇO'
+FROM Production.Product
+GROUP BY color 
+
+SELECT color, AVG (listprice) AS 'PREÇO'
+FROM Production.Product
+WHERE color = 'silver'
+GROUP BY color 
+
+DESAFIOS
+
+SELECT MiddleName, COUNT (MiddleName) AS 'quantidade'
+FROM person.person
+GROUP BY MiddleName
+
+SELECT ProductID, AVG(orderqty) AS 'MEDIA'
+FROM Sales.SalesOrderDetail
+GROUP BY ProductID
+
+SELECT TOP 10 productid, SUM(linetotal) AS 'Soma'
+FROM Sales.SalesOrderDetail
+GROUP BY ProductID
+ORDEr BY SUM(linetotal) desc
+
+SELECT productid, COUNT(productid) AS 'Contagem', AVG(orderqty) AS 'Media'
+FROM Production.WorkOrder
+GROUP BY ProductID
+
+--AULA14 
+Having - muito usado para junções em dados já agrupados, é como se fosse o where para dados já agrupados
+O where é aplicado antes dos dados serem agrupados, o having é aplicado depois 
+
+SELECT coluna1, funcaoagregacao(coluna2)
+FROM tabela 
+GROUP BY coluna1 
+HAVING condição;
+
+SELECT firstname, COUNT(firstname) AS 'Contagem'
+FROM Person.Person
+GROUP BY firstname 
+HAVING count(firstname) > 10
+
+somente os que se repetiram mais de dez vezes são mostrados 
+
+SELECT firstname, COUNT(firstname) as 'Quantidade'
+from person.person
+where title = 'Mr.'
+group by firstname
+having count(firstname) > 10
+
+--AULA19
+join
+juntar a informação de uma tabela com outra, a partir de uma coluna que tenham em comum 
+
+SELECT p.BusinessentityID, p.FirstName,p.Lastname,pe.Emailaddress
+FROM person.person AS p
+INNER JOIN Person.Emailaddress PE on p.BusinessentityID = pe.BusinessentityID
+
+tem que colocar esses apelidos, nomes das colunas vão se repetindo
+
+SELECT pr.Listprice, pr.Name, pc.Name
+FROM Production.Product pr
+INNER JOIN Production.ProductSubcategory PC on pc.ProductSubcategoryID = pr.ProductSubcategoryID
+
+
+SELECT *
+FROM Person.BusinessEntityAddress PBA
+INNER JOIN Person.Address PA on PBA.AddressID = PA.AddressID
+
+juntou tudo das duas tabelas a partir da coluna adressID
+
+--AULA20
+TIpos de join
+inner join retorna os que batem, nas colunas iguais
+
+full outer join retorna tanto os que batem quanto os que não batem
+
+left outer join retorna todos da coluna esquerda e mais os que batem (correspondentes) da coluna direita, os não correspondentes aparece null 
+right outer join retorna todos da coluna direita e mais os que batem da coluna esquerda, os não correspondentes aparece null 
+
+o perigo de usar o inner join é ele não mostrar os resultados em células nulas
+por exemplo 1000 pessoas cadastradas mas só 900 terem o cartão de crédito cadastrado, ao fazer inner join do cartão vai ter 100 linhas a menos
+claro, isso tudo nas colunas que se está equiparando, as de baixo
+
+--AULA22 
+UNION - combinar dois ou mais resultados de um select em um único resultado 
+
+select coluna1, coluna2 
+from tabela1
+union 
+select coluna1, coluna2 
+from tabela2
+
+o union remove os resultados duplicados, a não ser que se use o union all 
+usando union e where pode mandar unir somente os resultados que se quer, maiores que tal, like %essa, coisas assim 
+
+SELECT firstname, title
+FROM person.person
+WHERE title = 'mr.'
+UNION
+SELECT firstname, title 
+FROM person.person
+WHERE FirstName like 'a%'
+
+-AULA23
+Self join - forma de agrupar ou ordenar dados dentro da mesma tabela, se não cai dentro de nenhuma das outras informações se usa o Self
+tem que dar apelido pra tabela usando o AS
+
+SELECT A.Contactname, A.Region, B.Contactname, B.Region
+FROM Customers A, Customers B
+WHERE A.Region = B.Region
+
+SELECT A.firstname, A.hiredate, B.firstname, B.hiredate
+FROM Employees A, Employees B
+Where DATEPART(year, a.hiredate) = DATEPART(year, b.hiredate)
+
+monta a tabela de todos os funcionparios cadastrados no mesmo ano, que estavam dentro da tabela employees, sem que a gente diga o ano exato, mas separando por ano
+
+--AULA24 
+subquery - por exemplo quero todos os produtos acima da média do valor, teria que fazer duas querys, uma para ver a média e outra para mostrar acima do valor que eu encontrasse
+a subquery bota uma dentro da outra pra não precisar fazer isso
+
+SELECT *
+FROM Production.Product
+WHERE ListPrice > (SELECT AVG(Listprice) from production.Product)
+
+SELECT firstname 
+FROM person.person
+WHERE BusinessEntityID in (
+SELECT BusinessEntityID from HumanResources.Employee where jobtitle = 'design engineer')
+
+também daria pra fazer com inner join:
+
+select p.firstname
+from person.person p 
+inner join HumanResources.Employee he on p.BusinessEntityID = he.BusinessEntityID
+and he.JobTitle = 'design engineer'
+
+
+
+--AULA25
+datepart
+
+select avg(Totaldue) as media, datepart(month, orderdate) as mes
+from Sales.SalesOrderHeader
+GROUP BY DATEPART(month,orderdate)
+order by mes
+
+--AULA26 
+manipulação de strings, várias funções tipo python
+len
+upper 
+lower 
+concat para concatenar (o + do python)
+substring(firstname,1,3) retorna da letra 1 até a 3
+replace
+
+--AULA27 
+operações matemáticas 
++ - * / 
+avg sum max min 
+round(coluna,2) arredonda pra duas casas decimais
+SQRT
+
+--AULA28 
+Tipos de dados 
+
+boleanos - 1 ou 0, no python é o true ou false
+caractere - char
+numerais - exatos: tinyint, smallint, int, bigint, numeric ou decimal .... aproximados: real, float
+temporais - date, datetime, datetime2, smalldatetime, time
+
+--AULA29
+Chave primária e estrangeira
+
+primária:
+
+CREATE TABLE nome_tabela (
+    nomecoluna tipodedados PRIMARY KEY
+    nomecoluna tipodedados ... 
+)
+
+estrangeira:
+
+--AULA30
+create table 
+
+CREATE TABLE nometabela (
+    coluna1 tipo restricaoDaColuna,
+    coluna2 tipo, 
+    coluna3 tipo
+)
+
+tipos de restricao: 
+not null - não permite nulos 
+unique - força que todos os valores de uma coluna sejam diferentes 
+primary key - uma junção de not null e unique 
+foreign key - identifica unicamente uma linha em outra tabela 
+check - força uma condição específica em uma coluna 
+default - força um valor padrão quando nenhum valor é passado 
+
+CREATE TABLE canal (
+    CanalID INT PRIMARY KEY,
+    Nome VARCHAR(150) NOT NULL,
+    ContagemInscritos Int Default 0, 
+    Datacriacao DATETIME NOT NULL 
+);
+
+SELECT *
+FROM canal
+
+--AULA31 
+insert into 
+
+INSERT INTO nometabela (coluna1, coluna2, ...)
+VALUES (valor1, valor2)
+
+INSERT INTO nometabela (coluna1, coluna2, ...)
+VALUES (valor1, valor2)
+VALUES (valor1, valor2)
+VALUES (valor1, valor2)
+
+INSERT INTO TabelaA (coluna1)
+SELECT coluna2
+FROM TabelaB
+
+--AULA32 
+Update - atualizar linhas no banco de dados, uma ou todas 
+
+UPDATE nometabela 
+SET coluna1 = valor1
+    coluna2 = valor2
+WHERE condicao 
+
+--AULA33 
+Delete - igual ao update tem que colocar a condicao, se não vai deletar tudo 
+
+DELETE FROM nometabela 
+RHERE condicao 
+
+--AULA34
+Alter Table - alterar estrutura de uma tabela, adiciona e remove coisas, muda nome
+
+ALTER TABLE nomedatabela
+Ação 
+
+--AULA35
+DROP TABLE - excluir tabelta
+
+DROP TABLE nomedatabela 
+
+só é possível para tabelas que não são referenciadas por outras tabelas 
+
+para apagar apenas o conteúdo da tabela 
+
+truncate table nomedatabela 
+
+--AULA36
+check constraint - ajuda a criar restrições sobre valores, quando se está inserindo ou alterando valores 
+
+por exemplo, criar uma tabela e pedir pra checar se tem mais de 18 anos:
+
+CREATE TABLE Carteirademotora (
+ID int NOT NULL,
+NOME varchar(255) NOT NULL,
+Idade int check(idade >= 18)
+);
+
+INSERT INTO Carteirademotora (id,nome,idade) values(1,'lenin',19)
+
+select * from Carteirademotora
+
+se fosse 17 não deixaria adicionar 
+
+
+--AULA37
+Not Null Constraint - para que seja impossível criar o valor sem preencher
+na mesma tabela da carteirademotora:
+
+como tem os NOT NULL, quando vamos fazer um insert into é obrigatório colocar valor 
+
+--AULA37
+Unique Constraint: para ter colunas únicas, diferente do primary key pode ter várias colunas com a mesma restrição unique
+
+CREATE TABLE Carteirademotora (
+ID int NOT NULL,
+NOME varchar(255) NOT NULL,
+Idade int check(idade >= 18),
+CodigoCNH int NOT NULL UNIQUE
+);
+
+o código da cnh nunca vai repetir, não se permite adicionar se já existe 
+
+--AULA38
+Views - uma forma de você de uma tabela existente, porém uma informação bem específica em que não se precisa de todas as informações daquela tabela 
+
+CREATE VIEW [Pessoas Simplificado] AS
+SELECT FirstName, MiddleName, LastName 
+FROM Person.Person 
+WHERE Title = 'Ms.'
+
+SELECT * FROM [Pessoas Simplificado]
+
+toda a informação extraída depois do AS é jogada para a visualização 
+
+
+
