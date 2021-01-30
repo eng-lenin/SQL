@@ -1,2 +1,2 @@
 # SQL
- Trainning
+ Trainning SQL
